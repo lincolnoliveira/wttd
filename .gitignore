@@ -4,7 +4,9 @@
 *.sqlite3
 *.pyc
 __pycache__
-ativar
 /google-python-exercises/
 /mod-1-28-mapa-da-estrutura-do-eventex.xmind
 /mod-1-29-visao-alem-do-alcance.xmind
+/ativar
+/staticfiles/
+

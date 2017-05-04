@@ -19,3 +19,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eventex.settings")
 # isso para poder servir os arquivos estáticos
 
 application = Cling(get_wsgi_application())
+#application = get_wsgi_application()  ---> se for buscar de um servidor http local, funciona direto do django

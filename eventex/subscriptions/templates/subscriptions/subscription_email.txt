@@ -1,0 +1,14 @@
+Oi mané!
+
+Obrigado por se inscrever!
+
+Estes foram os dados que você nos forneceu:
+
+Nome: {{ name }}
+CPF: {{ cpf }}
+e-mail: {{ email }}
+Fone: {{ phone }}
+
+Valeu!
+
+Eventex Team

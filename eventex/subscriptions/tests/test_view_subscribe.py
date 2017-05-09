@@ -4,7 +4,7 @@ from eventex.subscriptions.forms import SubscriptionForm
 
 
 # cada classe dessa é um cenário de testes
-class SubscribeTest(TestCase):
+class SubscribeGet(TestCase):
     def setUp(self):
         self.resp = self.client.get("/inscricao/")
 
@@ -18,11 +18,14 @@ class SubscribeTest(TestCase):
 
     def test_html(self):
         """html da resposta deve conter input tags"""
-        self.assertContains(self.resp, '<form')
-        self.assertContains(self.resp, '<input', 6) # 4 campos, 1 botão e a csrf
-        self.assertContains(self.resp, 'type="text"', 3)
-        self.assertContains(self.resp, 'type="email"', 1)
-        self.assertContains(self.resp, 'type="submit"')
+        tags = (('<form', 1),
+                ('<input', 6),
+                ('type="text"', 3),
+                ('type="email"', 1),
+                ('type="submit"',1))
+        for text, count in tags:
+            with self.subTest():
+                self.assertContains(self.resp, text, count)
 
     def test_csrf(self):
         """html deve conter tag de proteção contra csrf"""
@@ -33,12 +36,8 @@ class SubscribeTest(TestCase):
         form = self.resp.context['form']
         self.assertIsInstance(form, SubscriptionForm)
 
-    def test_form_has_fields(self):
-        """Form deve ter 4 campos"""
-        form = self.resp.context["form"]
-        self.assertSequenceEqual(['name','cpf','email','phone'],list(form.fields))
 
-class SubscribePostTest(TestCase):
+class SubscribePostValid(TestCase):
     def setUp(self):
         dados = dict(name = "João Balalão",
                      cpf = '888777666-55',
@@ -55,26 +54,8 @@ class SubscribePostTest(TestCase):
         # esse mail, não manda realmente, apena guarda no outbox
         self.assertEqual(1, len(mail.outbox))
 
-    def test_assunto_do_email(self):
-        email = mail.outbox[0]
-        self.assertEqual('Confirmação de inscrição',email.subject)
 
-    def test_remetente_do_email(self):
-        email = mail.outbox[0]
-        self.assertEqual('contato@eventex.com.br',email.from_email)
-
-    def test_destinatario_do_email(self):
-        email = mail.outbox[0]
-        self.assertEqual(['contato@eventex.com.br','lincoln@cmc.pr.gov.br' ],email.to)
-
-    def test_corpo_do_email(self):
-        email = mail.outbox[0]
-        self.assertIn('João Balalão',email.body)
-        self.assertIn('888777666-55',email.body)
-        self.assertIn('lincoln@cmc.pr.gov.br',email.body)
-        self.assertIn('(41)3350-5813',email.body)
-
-class SubscribeInvalidPostTest(TestCase):
+class SubscribeInvalidPostInvalid(TestCase):
     def setUp(self):
         # mandou um form vazio, dicionario vazio, para forçar os testes de erro
         self.resp = self.client.post('/inscricao/', {})

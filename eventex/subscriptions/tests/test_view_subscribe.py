@@ -4,6 +4,9 @@ from eventex.subscriptions.forms import SubscriptionForm
 
 
 # cada classe dessa é um cenário de testes
+from eventex.subscriptions.models import Subscription
+
+
 class SubscribeGet(TestCase):
     def setUp(self):
         self.resp = self.client.get("/inscricao/")
@@ -54,6 +57,9 @@ class SubscribePostValid(TestCase):
         # esse mail, não manda realmente, apena guarda no outbox
         self.assertEqual(1, len(mail.outbox))
 
+    def test_save_subscription(self):
+        self.assertTrue(Subscription.objects.exists())
+
 
 class SubscribeInvalidPostInvalid(TestCase):
     def setUp(self):
@@ -77,6 +83,11 @@ class SubscribeInvalidPostInvalid(TestCase):
         """ """
         form = self.resp.context['form']
         self.assertTrue(form.errors)
+
+    def test_dont_save_subscription(self):
+        self.assertFalse(Subscription.objects.exists())
+
+
 
 class SubscribeSuccessMessage(TestCase):
     def setUp(self):

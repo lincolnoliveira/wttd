@@ -6,7 +6,6 @@ heroku==0.1.4
 psycopg2==2.6.1
 python-dateutil==1.5
 python-decouple==3.0
-pytz==2017.2
 requests==2.11.1
 static3==0.7.0
 django-extensions==1.7.9

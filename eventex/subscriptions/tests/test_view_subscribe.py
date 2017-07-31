@@ -1,8 +1,7 @@
 from django.core import mail
 from django.test import TestCase
+
 from eventex.subscriptions.forms import SubscriptionForm
-
-
 # cada classe dessa é um cenário de testes
 from eventex.subscriptions.models import Subscription
 
@@ -49,9 +48,13 @@ class SubscribePostValid(TestCase):
         self.resp = self.client.post('/inscricao/', dados)
 
     def test_post(self):
-        """Valid post deve redirecionar para /inscricao/"""
+        """Valid post deve redirecionar para /inscricao/1/"""
+
         # testa status 302 que é redirecionar
-        self.assertEqual(302, self.resp.status_code)
+        # self.assertEqual(302, self.resp.status_code) # --> mudou agora redireciona e usa o teste abaixo
+
+        # testa se foi redirecionado para /inscricao/1/
+        self.assertRedirects(self.resp, '/inscricao/1/')
 
     def test_sent_subscribe_email(self):
         # esse mail, não manda realmente, apena guarda no outbox
@@ -61,7 +64,7 @@ class SubscribePostValid(TestCase):
         self.assertTrue(Subscription.objects.exists())
 
 
-class SubscribeInvalidPostInvalid(TestCase):
+class SubscribePostInvalid(TestCase):
     def setUp(self):
         # mandou um form vazio, dicionario vazio, para forçar os testes de erro
         self.resp = self.client.post('/inscricao/', {})
@@ -88,14 +91,14 @@ class SubscribeInvalidPostInvalid(TestCase):
         self.assertFalse(Subscription.objects.exists())
 
 
-
-class SubscribeSuccessMessage(TestCase):
-    def setUp(self):
-        dados = dict(name = "João Balalão",
-                     cpf = '888777666-55',
-                     email = 'lincoln@cmc.pr.gov.br',
-                     phone = '(41)3350-5813')
-        self.resp = self.client.post('/inscricao/', dados, follow = True)
-
-    def test_message(self):
-        self.assertContains(self.resp, 'Inscrição realizada com sucesso!')
+# @unittest.skip('A ser removido') -->
+# class SubscribeSuccessMessage(TestCase):
+#     def setUp(self):
+#         dados = dict(name = "João Balalão",
+#                      cpf = '888777666-55',
+#                      email = 'lincoln@cmc.pr.gov.br',
+#                      phone = '(41)3350-5813')
+#         self.resp = self.client.post('/inscricao/', dados, follow = True)
+#
+#     def test_message(self):
+#         self.assertContains(self.resp, 'Inscrição realizada com sucesso!')

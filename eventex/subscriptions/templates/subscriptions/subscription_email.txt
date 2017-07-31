@@ -4,10 +4,10 @@ Obrigado por se inscrever!
 
 Estes foram os dados que você nos forneceu:
 
-Nome: {{ name }}
-CPF: {{ cpf }}
-e-mail: {{ email }}
-Fone: {{ phone }}
+Nome: {{ subscription.name }}
+CPF: {{ subscription.cpf }}
+e-mail: {{ subscription.email }}
+Fone: {{ subscription.phone }}
 
 Valeu!
 
